@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ParticleHero            from './components/ParticleHero';
 import TimelessQuoteSection    from './components/TimelessQuoteSection';
 import MemoriesHorizontalSection from './components/MemoriesHorizontalSection';
+import InviteSection from './components/InviteSection';
 import './App.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -25,6 +26,7 @@ export default function App() {
       <ParticleHero />
       <TimelessQuoteSection />
       <MemoriesHorizontalSection />
+      <InviteSection />
     </main>
   );
 }

@@ -11,6 +11,9 @@
   height: 100vh;
   background: #000;
   overflow: hidden;
+  /* z-index keeps the canvas above the quote section, which sits at
+     doc y=0 before GSAP fires its spacer (due to margin-top: -100vh). */
+  z-index: 10;
 }
 
 /* Three.js injects the canvas as a direct child */

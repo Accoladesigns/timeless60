@@ -1,0 +1,223 @@
+/* ─────────────────────────────────────────────────────────────
+   MemoriesHorizontalSection.css
+
+   Warm, cinematic horizontal memory gallery.
+   Continues visually from the quote section's old-paper beige
+   (#F2E6D0) into a sunlit golden palette.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Section shell ──────────────────────────────────────────── */
+.mem-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+
+  /* Gradient: continues beige → cream → warm gold */
+  background:
+    /* Grain layer */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.042'/%3E%3C/svg%3E"),
+    linear-gradient(
+      148deg,
+      #F2E6D0 0%,
+      #FFF3C7 22%,
+      #F7E7B0 55%,
+      #F3C64A 100%
+    );
+}
+
+/* ── Dust canvas ────────────────────────────────────────────── */
+.mem-dust {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.7;
+}
+
+/* ── Radial sunlight glow ───────────────────────────────────── */
+.mem-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 88vw;
+  height: 88vh;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 248, 200, 0.58) 0%,
+    rgba(243, 198, 74,  0.16) 48%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── "Memories" section label ───────────────────────────────── */
+/* Remove the <span> in JSX to hide this entirely */
+.mem-label {
+  position: absolute;
+  bottom: 32px;
+  left: 44px;
+  z-index: 10;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 13px;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(37, 24, 5, 0.36);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Horizontal track ───────────────────────────────────────── */
+.mem-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* Width is naturally determined by its children */
+  will-change: transform;
+  z-index: 1;
+}
+
+/* ── Breathing space at ends ────────────────────────────────── */
+.mem-lead  { flex-shrink: 0; width: 20vw; }
+.mem-trail { flex-shrink: 0; width: 30vw; }
+
+/* ── Memory card ────────────────────────────────────────────── */
+.mem-card {
+  flex-shrink: 0;
+  position: relative;
+
+  /* Size: cinematic wide cards */
+  width:  clamp(300px, 58vw, 840px);
+  height: clamp(280px, 68vh, 700px);
+
+  /* Gap between cards */
+  margin: 0 clamp(18px, 2.8vw, 52px);
+
+  /* Elegant rounded photo corners */
+  border-radius: 28px;
+  overflow: hidden;
+
+  /* Glass-like photo border */
+  border: 1.5px solid rgba(255, 255, 255, 0.44);
+
+  /* Warm amber shadow */
+  box-shadow:
+    0  8px 36px rgba(140, 80, 8, 0.14),
+    0  2px 10px rgba(140, 80, 8, 0.08);
+
+  /* Rotation from --rot CSS variable set inline */
+  transform: rotate(var(--rot, 0deg));
+
+  /* GSAP manages opacity/scale/filter — will-change hint */
+  will-change: transform, opacity, filter;
+
+  /* Smooth shadow on hover */
+  transition: box-shadow 0.45s ease;
+}
+
+.mem-card:hover {
+  box-shadow:
+    0 14px 52px rgba(140, 80, 8, 0.22),
+    0  4px 16px rgba(140, 80, 8, 0.12);
+}
+
+/* ── Inner wrapper — parallax target ────────────────────────── */
+.mem-inner {
+  /* Slightly oversized so parallax shift doesn't expose gaps */
+  width:  110%;
+  height: 110%;
+  margin: -5% 0 0 -5%;
+  will-change: transform;
+}
+
+/* ── Photo image ────────────────────────────────────────────── */
+.mem-inner img {
+  display: block;
+  width:  100%;
+  height: 100%;
+  /* objectFit set inline per image (default: cover) */
+  user-select: none;
+  pointer-events: none;
+  /* Very subtle warm tone */
+  filter: saturate(1.04) brightness(0.98);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Mobile — native horizontal scroll with scroll-snap
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .mem-section {
+    height: auto;
+    /* Native horizontal scroll */
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    /* Hide scrollbar */
+    scrollbar-width: none;
+  }
+  .mem-section::-webkit-scrollbar { display: none; }
+
+  .mem-track {
+    position: relative;
+    height: 72vh;
+  }
+
+  .mem-card {
+    width:  clamp(260px, 84vw, 380px);
+    height: clamp(240px, 60vh, 440px);
+    border-radius: 20px;
+    margin: 0 10px;
+    scroll-snap-align: center;
+    /* Override GSAP-set values */
+    opacity: 1 !important;
+    scale:  1 !important;
+    filter: none !important;
+    transform: rotate(var(--rot, 0deg)) !important;
+  }
+
+  .mem-lead  { width: 8vw; }
+  .mem-trail { width: 12vw; }
+
+  .mem-label {
+    bottom: 16px;
+    left: 20px;
+    font-size: 11px;
+  }
+
+  .mem-dust  { display: none; }
+  .mem-glow  { width: 120vw; height: 60vh; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Reduced-motion — stacked horizontal native scroll
+   ───────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .mem-section {
+    height: auto;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  .mem-track {
+    position: relative;
+    height: 82vh;
+  }
+  .mem-card {
+    scroll-snap-align: center;
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+  .mem-dust { display: none; }
+}

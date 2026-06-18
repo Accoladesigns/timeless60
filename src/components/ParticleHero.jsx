@@ -182,6 +182,23 @@ export default function ParticleHero() {
     let t       = 0;
     let lastNow = performance.now();
 
+    // ── ScrollTrigger pin — created BEFORE image loads ───────────────────
+    // This must happen here (not inside img.onload) so the 2400px spacer
+    // exists in the DOM before TimelessQuoteSection's useEffect runs its
+    // own ScrollTrigger.create().  React runs sibling useEffects in tree
+    // order, so hero fires first — but image loading is async and would
+    // otherwise create the spacer too late for the quote trigger.
+    ScrollTrigger.create({
+      trigger:    sticky,
+      start:      'top top',
+      end:        '+=2400',
+      pin:        true,
+      pinSpacing: true,
+      onUpdate(self) {
+        rawProgress = self.progress;
+      },
+    });
+
     // ── Load image ────────────────────────────────────────────────────────
     let destroyed = false;
     const img = new Image();
@@ -237,27 +254,6 @@ export default function ParticleHero() {
 
       points = new THREE.Points(geo, mat);
       scene.add(points);
-
-      // ── ScrollTrigger with GSAP pin ───────────────────────────────────
-      // pin:true locks the hero div in place while ScrollTrigger creates
-      // 2400px of virtual scroll space.  The camera zoom-out plays through
-      // that space, then the pin releases and normal scrolling resumes.
-      ScrollTrigger.create({
-        trigger:    sticky,
-        start:      'top top',
-        end:        '+=2400',
-        pin:        true,
-        pinSpacing: true,
-        onUpdate(self) {
-          rawProgress = self.progress;
-        },
-      });
-
-      // The hero spacer was just inserted into the DOM.  Any ScrollTrigger
-      // that was calculated before this (e.g. the quote section's trigger,
-      // which runs its useEffect at mount before the image finishes loading)
-      // will have stale positions.  Refresh so every trigger recalculates.
-      ScrollTrigger.refresh();
 
       // ── Kick off the render loop ───────────────────────────────────────
       lastNow = performance.now();

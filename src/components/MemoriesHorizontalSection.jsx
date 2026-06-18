@@ -95,8 +95,55 @@ export default function MemoriesHorizontalSection() {
       section._cleanDustResize = () => window.removeEventListener('resize', onDustResize);
     }
 
-    // ── Mobile / reduced-motion: CSS handles scroll-snap layout ──────────
-    if (prefersReduced || isMobile) {
+    // ── Mobile: auto-scroll carousel ─────────────────────────────────────
+    if (isMobile && !prefersReduced) {
+      const cards   = cardRefs.current.filter(Boolean);
+      let current   = 0;
+      let paused    = false;
+      let resumeTimer;
+
+      const scrollToCard = (idx) => {
+        const card = cards[idx];
+        if (!card) return;
+        // Centre the card in the section's scroll container
+        const sectionLeft = section.getBoundingClientRect().left;
+        const cardCx      = card.getBoundingClientRect().left + card.offsetWidth / 2 - sectionLeft;
+        const target      = section.scrollLeft + cardCx - section.offsetWidth / 2;
+        section.scrollTo({ left: target, behavior: 'smooth' });
+      };
+
+      const advance = () => {
+        if (paused) return;
+        current = (current + 1) % cards.length;
+        scrollToCard(current);
+      };
+
+      const interval = setInterval(advance, 3000);
+
+      // Pause on touch; resume 4 s after finger lifts
+      const onTouchStart = () => {
+        paused = true;
+        clearTimeout(resumeTimer);
+      };
+      const onTouchEnd = () => {
+        resumeTimer = setTimeout(() => { paused = false; }, 4000);
+      };
+
+      section.addEventListener('touchstart', onTouchStart, { passive: true });
+      section.addEventListener('touchend',   onTouchEnd,   { passive: true });
+
+      return () => {
+        clearInterval(interval);
+        clearTimeout(resumeTimer);
+        section.removeEventListener('touchstart', onTouchStart);
+        section.removeEventListener('touchend',   onTouchEnd);
+        cancelAnimationFrame(dustRaf);
+        section._cleanDustResize?.();
+      };
+    }
+
+    // ── Reduced-motion / fallback ─────────────────────────────────────────
+    if (prefersReduced) {
       return () => {
         cancelAnimationFrame(dustRaf);
         section._cleanDustResize?.();

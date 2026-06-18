@@ -8,20 +8,26 @@
 .particle-hero {
   position: relative;
   width: 100%;
-  height: 100vh;
-  background: #000;
-  overflow: hidden;
-  /* z-index keeps the canvas above the quote section, which sits at
-     doc y=0 before GSAP fires its spacer (due to margin-top: -100vh). */
-  z-index: 10;
+  /* height: 0 means the element takes no space in the document flow.
+     GSAP's pin spacer (2400px) starts at doc y=0, so the quote section
+     lands at exactly doc y=2400 — matching the hero pin end.
+     No margin hacks, no stacking-context fights, no gap. */
+  height: 0;
+  overflow: visible;   /* canvas overflows downward without clipping */
+  z-index: 10;         /* stay above the quote section's stacking layer */
 }
 
 /* Three.js injects the canvas as a direct child */
 .particle-hero canvas {
+  /* Absolute so it doesn't push anything in the flow.
+     Width/height in viewport units so it fills the screen
+     regardless of the parent's 0 height. */
+  position: absolute;
+  top: 0;
+  left: 0;
   display: block !important;
-  width:  100% !important;
-  height: 100% !important;
-  vertical-align: bottom;
+  width:  100vw !important;
+  height: 100vh !important;
 }
 
 /* Reduced-motion fallback */

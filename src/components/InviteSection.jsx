@@ -71,7 +71,7 @@ export default function InviteSection() {
       r:  Math.random() * 1.6 + 0.5,
       vx: (Math.random() - 0.5) * 0.08,
       vy: -(Math.random() * 0.18 + 0.04),
-      a:  Math.random() * 0.20 + 0.06,
+      a:  Math.random() * 0.09 + 0.03,
       pa: Math.random() * Math.PI * 2, // phase for opacity pulse
       ps: Math.random() * 0.004 + 0.002,
     }));

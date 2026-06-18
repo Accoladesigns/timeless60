@@ -21,11 +21,11 @@
   overflow: hidden;
 }
 
-/* ── Background (colour animated by GSAP) ───────────────────── */
+/* ── Background — starts beige immediately, no dark phase ───── */
 .timeless-bg {
   position: absolute;
   inset: 0;
-  background: #07070f;   /* initial state — overridden by GSAP */
+  background: #F2E6D0;
   z-index: 0;
 }
 

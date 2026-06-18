@@ -280,22 +280,26 @@ export default function ParticleHero() {
       lastNow  = now;
       t += dt * 0.016; // wall-clock seconds (approx)
 
-      // ── Smooth scroll progress ────────────────────────────────────────
+      // ── Smooth scroll progress (for particle physics only) ───────────
+      // smoothProgress intentionally lags rawProgress — gives the particle
+      // spring/depth/idle a nice organic feel while camera is decoupled.
       smoothProgress += (rawProgress - smoothProgress) * 0.09;
       const sp = smoothProgress;
 
-      // ── Camera ───────────────────────────────────────────────────────
-      // Zoom completes at 75% of scroll progress — the remaining 25%
-      // is a hold so the portrait is fully visible before the pin releases.
-      const zoomSp = Math.min(sp / 0.75, 1.0);
-      const targetCamZ = CAM_Z_START + zoomSp * (CAM_Z_END - CAM_Z_START);
-      const targetCamY = (1 - sp) * -0.04;
-      camera.position.z += (targetCamZ - camera.position.z) * 0.07 * dt;
-      camera.position.y += (targetCamY - camera.position.y) * 0.07 * dt;
+      // ── Camera — driven by rawProgress directly (no lag) ─────────────
+      // Using rawProgress (not smoothProgress) guarantees the portrait is
+      // fully revealed before the pin releases regardless of scroll speed.
+      // Zoom target is reached at rawProgress 0.60, giving 40% hold time.
+      const camProg    = Math.min(rawProgress / 0.60, 1.0);
+      const targetCamZ = CAM_Z_START + camProg * (CAM_Z_END - CAM_Z_START);
+      const targetCamY = (1 - camProg) * -0.04;
+      // Fast lerp (0.18) so camera catches the target within a few frames.
+      camera.position.z += (targetCamZ - camera.position.z) * 0.18 * dt;
+      camera.position.y += (targetCamY - camera.position.y) * 0.18 * dt;
 
       // Subtle forward tilt that flattens as the portrait reveals
       if (points) {
-        points.rotation.x += ((1 - sp) * 0.055 - points.rotation.x) * 0.06 * dt;
+        points.rotation.x += ((1 - camProg) * 0.055 - points.rotation.x) * 0.10 * dt;
       }
 
       // ── Depth spread: collapses to 0 as scroll progresses ─────────────

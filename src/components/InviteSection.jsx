@@ -27,7 +27,7 @@ const inviteDetails = {
 };
 
 const whatsappMessage = encodeURIComponent(
-  "Hello, I would love to confirm my presence for Deepak's 60th celebration on 21st May from 4:00 PM to 7:00 PM at Flamboyante, Cuffe Parade. I will make sure to reach on time for the planned activities."
+  "Hello, I would love to confirm my presence for Deepak's 60th Birthday celebration on 21st June from 4:00 PM to 7:00 PM at Flamboyante, Cuffe Parade. I will make sure to reach on time for the planned activities."
 );
 const rsvpLink       = `https://wa.me/918879936869?text=${whatsappMessage}`;
 const directionsLink = 'https://maps.app.goo.gl/UEZHNTG4DQggUtXf9';

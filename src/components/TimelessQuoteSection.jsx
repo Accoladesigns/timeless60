@@ -6,12 +6,11 @@
  * The quote appears line-by-line using a GSAP scrub timeline.
  *
  * Scroll sequence (normalised 0 → 1):
- *   0.00 – 0.30  dark hold (portrait still fresh in mind)
- *   0.30 – 0.68  background dark → old-paper beige (#F2E6D0)
- *   0.45 – 0.72  radial glow rises
- *   0.65 – 0.78  line 1 reveals
- *   0.78 – 0.90  line 2 reveals
- *   0.90 – 1.00  final state holds
+ *   0.00 – 0.45  background dark → old-paper beige (#F2E6D0)
+ *   0.25 – 0.55  radial glow rises
+ *   0.50 – 0.68  line 1 reveals
+ *   0.68 – 0.85  line 2 reveals
+ *   0.85 – 1.00  final state holds
  */
 
 import { useEffect, useRef } from 'react';
@@ -47,44 +46,42 @@ export default function TimelessQuoteSection() {
 
     // ── Build scrub timeline ───────────────────────────────────────────────
     // All positions are normalised: 0 = scroll start, 1 = scroll end.
-    // We create a 1-second timeline and let scrub drive it.
+    // No dark hold — transition starts immediately so there's no black gap
+    // after the hero un-pins.
     const tl = gsap.timeline();
 
-    // Dark hold (0% → 30%) — nothing changes, lets portrait linger
-    tl.to({}, { duration: 0.30 }, 0);
-
-    // Background: dark → old-paper beige (30% → 68%)
+    // Background: dark → old-paper beige (0% → 45%)
     tl.fromTo(bg,
       { backgroundColor: '#07070f' },
-      { backgroundColor: '#F2E6D0', duration: 0.38, ease: 'power1.inOut' },
-      0.30
+      { backgroundColor: '#F2E6D0', duration: 0.45, ease: 'power1.inOut' },
+      0
     );
 
-    // Radial glow rises (45% → 72%)
+    // Radial glow rises (25% → 55%)
     tl.fromTo(glow,
       { opacity: 0, scale: 0.80 },
-      { opacity: 1, scale: 1,   duration: 0.27, ease: 'power2.out' },
-      0.45
+      { opacity: 1, scale: 1,   duration: 0.30, ease: 'power2.out' },
+      0.25
     );
 
-    // Line 1 (65% → 78%)
+    // Line 1 (50% → 68%)
     tl.fromTo(line1,
       { opacity: 0, y: 32, filter: 'blur(10px)' },
       { opacity: 1, y: 0,  filter: 'blur(0px)',
-        duration: 0.13, ease: 'power3.out' },
-      0.65
+        duration: 0.18, ease: 'power3.out' },
+      0.50
     );
 
-    // Line 2 (78% → 90%)
+    // Line 2 (68% → 85%)
     tl.fromTo(line2,
       { opacity: 0, y: 32, filter: 'blur(10px)' },
       { opacity: 1, y: 0,  filter: 'blur(0px)',
-        duration: 0.12, ease: 'power3.out' },
-      0.78
+        duration: 0.17, ease: 'power3.out' },
+      0.68
     );
 
     // Hold — pad to 1.0 so final state settles
-    tl.to({}, { duration: 0.10 }, 0.90);
+    tl.to({}, { duration: 0.15 }, 0.85);
 
     // ── ScrollTrigger: pin + scrub ─────────────────────────────────────────
     const st = ScrollTrigger.create({
@@ -93,7 +90,7 @@ export default function TimelessQuoteSection() {
       end:        '+=2400',  // 2400px of virtual scroll space
       pin:        true,
       pinSpacing: true,
-      scrub:      1.8,       // slight lag for cinematic feel
+      scrub:      1.2,       // slight lag for cinematic feel
       animation:  tl,
     });
 

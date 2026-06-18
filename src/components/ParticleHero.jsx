@@ -281,11 +281,14 @@ export default function ParticleHero() {
       t += dt * 0.016; // wall-clock seconds (approx)
 
       // ── Smooth scroll progress ────────────────────────────────────────
-      smoothProgress += (rawProgress - smoothProgress) * 0.055;
+      smoothProgress += (rawProgress - smoothProgress) * 0.09;
       const sp = smoothProgress;
 
       // ── Camera ───────────────────────────────────────────────────────
-      const targetCamZ = CAM_Z_START + sp * (CAM_Z_END - CAM_Z_START);
+      // Zoom completes at 75% of scroll progress — the remaining 25%
+      // is a hold so the portrait is fully visible before the pin releases.
+      const zoomSp = Math.min(sp / 0.75, 1.0);
+      const targetCamZ = CAM_Z_START + zoomSp * (CAM_Z_END - CAM_Z_START);
       const targetCamY = (1 - sp) * -0.04;
       camera.position.z += (targetCamZ - camera.position.z) * 0.07 * dt;
       camera.position.y += (targetCamY - camera.position.y) * 0.07 * dt;

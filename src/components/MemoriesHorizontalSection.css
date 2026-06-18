@@ -13,17 +13,10 @@
   height: 100vh;
   overflow: hidden;
 
-  /* Gradient: continues beige → cream → warm gold */
+  /* Same old-paper beige as the quote section */
   background:
-    /* Grain layer */
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.042'/%3E%3C/svg%3E"),
-    linear-gradient(
-      148deg,
-      #F2E6D0 0%,
-      #FFF3C7 22%,
-      #F7E7B0 55%,
-      #F3C64A 100%
-    );
+    #F2E6D0;
 }
 
 /* ── Dust canvas ────────────────────────────────────────────── */
@@ -48,8 +41,8 @@
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(255, 248, 200, 0.58) 0%,
-    rgba(243, 198, 74,  0.16) 48%,
+    rgba(255, 248, 230, 0.50) 0%,
+    rgba(230, 210, 170, 0.18) 50%,
     transparent 70%
   );
   pointer-events: none;

@@ -1,0 +1,118 @@
+/* ─────────────────────────────────────────────────────────────
+   TimelessQuoteSection.css
+
+   Full-viewport section pinned by GSAP ScrollTrigger.
+   Background animates from near-black → old-paper beige (#F2E6D0).
+   Quote appears line-by-line on scroll.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Section shell ──────────────────────────────────────────── */
+.timeless-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ── Background (colour animated by GSAP) ───────────────────── */
+.timeless-bg {
+  position: absolute;
+  inset: 0;
+  background: #07070f;   /* initial state — overridden by GSAP */
+  z-index: 0;
+}
+
+/* ── Film grain texture ──────────────────────────────────────── */
+.timeless-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ── Radial glow — warm ivory, very soft ────────────────────── */
+.timeless-glow {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width:  min(80vw, 900px);
+  height: min(80vw, 900px);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 248, 230, 0.50) 0%,
+    rgba(230, 210, 170, 0.18) 50%,
+    transparent 70%
+  );
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+/* ── Quote wrapper ───────────────────────────────────────────── */
+.timeless-quote-wrap {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  padding: 0 clamp(24px, 5vw, 80px);
+  max-width: 900px;
+  width: 100%;
+}
+
+/* ── Quote text — vintage, small, cinematic ─────────────────── */
+.timeless-quote {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.85;
+  letter-spacing: 0.05em;
+  color: #2C1A0E;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.timeless-quote span {
+  display: block;
+  font-size: clamp(15px, 1.65vw, 26px);
+  will-change: opacity, transform, filter;
+}
+
+/* ── Tablet ──────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .timeless-quote span {
+    font-size: clamp(14px, 2.2vw, 22px);
+  }
+}
+
+/* ── Mobile ──────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .timeless-quote {
+    line-height: 1.9;
+  }
+  .timeless-quote span {
+    font-size: clamp(13px, 3.8vw, 18px);
+  }
+  .timeless-quote-wrap {
+    padding: 0 24px;
+  }
+}
+
+/* ── Reduced-motion override ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .timeless-quote span {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

@@ -1,0 +1,45 @@
+/* ─────────────────────────────────────────────────────────────
+   ParticleHero.css
+
+   Single full-viewport div.  GSAP ScrollTrigger pins it in place
+   while scroll drives the camera zoom-out animation.
+   ───────────────────────────────────────────────────────────── */
+
+.particle-hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #000;
+  overflow: hidden;
+}
+
+/* Three.js injects the canvas as a direct child */
+.particle-hero canvas {
+  display: block !important;
+  width:  100% !important;
+  height: 100% !important;
+  vertical-align: bottom;
+}
+
+/* Reduced-motion fallback */
+.particle-fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  background: #000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-hero canvas {
+    display: none !important;
+  }
+  .particle-hero::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: url('/deepak-hero-particles.png') center / contain no-repeat #000;
+  }
+}

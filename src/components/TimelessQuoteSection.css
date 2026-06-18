@@ -11,6 +11,10 @@
   position: relative;
   width: 100%;
   height: 100vh;
+  /* Pulls section up by the hero div's natural height (100vh).
+     Without this, GSAP's hero spacer + the hero's own 100vh height
+     creates a 100vh black gap after hero unpins at scroll 2400. */
+  margin-top: -100vh;
   display: flex;
   align-items: center;
   justify-content: center;

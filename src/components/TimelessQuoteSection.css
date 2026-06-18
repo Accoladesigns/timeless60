@@ -17,14 +17,13 @@
   overflow: hidden;
 }
 
-/* ── Background — transparent in CSS, set to #F2E6D0 by GSAP ── */
-/* Must be transparent here: margin-top:-100vh places this section
-   at doc y=0 before GSAP fires its hero spacer, so a visible CSS
-   colour would flash over the particle canvas on page load.       */
+/* ── Background (GSAP animates dark → beige on scroll) ─────── */
+/* Hero has z-index:10, so this dark bg is hidden behind the canvas
+   on page load. GSAP set() initialises it to #07070f immediately. */
 .timeless-bg {
   position: absolute;
   inset: 0;
-  background: transparent;
+  background: #07070f;
   z-index: 0;
 }
 

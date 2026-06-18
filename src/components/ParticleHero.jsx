@@ -253,6 +253,12 @@ export default function ParticleHero() {
         },
       });
 
+      // The hero spacer was just inserted into the DOM.  Any ScrollTrigger
+      // that was calculated before this (e.g. the quote section's trigger,
+      // which runs its useEffect at mount before the image finishes loading)
+      // will have stale positions.  Refresh so every trigger recalculates.
+      ScrollTrigger.refresh();
+
       // ── Kick off the render loop ───────────────────────────────────────
       lastNow = performance.now();
       rafRef.current = requestAnimationFrame(loop);

@@ -1,15 +1,13 @@
 /**
  * TimelessQuoteSection.jsx
  *
- * The section immediately after the particle hero.
- * Starts IMMEDIATELY as old-paper beige — no dark period, no black flash
- * when the hero releases. The glow and quote lines animate in on scroll.
- *
+ * Full-viewport section pinned after the particle hero.
  * Scroll sequence (normalised 0 → 1):
- *   0.00 – 0.40  radial glow rises
- *   0.30 – 0.60  line 1 reveals
- *   0.55 – 0.82  line 2 reveals
- *   0.82 – 1.00  final state holds
+ *   0.00 – 0.50  background dark (#07070f) → old-paper beige (#F2E6D0)
+ *   0.30 – 0.62  radial glow rises
+ *   0.55 – 0.75  line 1 reveals
+ *   0.72 – 0.90  line 2 reveals
+ *   0.90 – 1.00  hold
  */
 
 import { useEffect, useRef } from 'react';
@@ -35,44 +33,43 @@ export default function TimelessQuoteSection() {
     if (!section || !bg || !glow || !line1 || !line2) return;
 
     // ── Set initial states ─────────────────────────────────────────────────
-    // Background starts BEIGE immediately — no dark period, no black flash
-    // when the hero releases.
-    gsap.set(bg,   { backgroundColor: '#F2E6D0' });
-    gsap.set(glow, { opacity: 0, scale: 0.72 });
-    gsap.set([line1, line2], {
-      opacity: 0,
-      y: 32,
-      filter: 'blur(10px)',
-    });
+    gsap.set(bg,   { backgroundColor: '#07070f' });
+    gsap.set(glow, { opacity: 0, scale: 0.80 });
+    gsap.set([line1, line2], { opacity: 0, y: 32, filter: 'blur(10px)' });
 
     // ── Build scrub timeline ───────────────────────────────────────────────
     const tl = gsap.timeline();
 
-    // Radial glow rises (0% → 40%)
-    tl.fromTo(glow,
-      { opacity: 0, scale: 0.80 },
-      { opacity: 1, scale: 1,   duration: 0.40, ease: 'power2.out' },
+    // Background: dark → old-paper beige (0% → 50%)
+    tl.fromTo(bg,
+      { backgroundColor: '#07070f' },
+      { backgroundColor: '#F2E6D0', duration: 0.50, ease: 'power1.inOut' },
       0
     );
 
-    // Line 1 (30% → 60%)
-    tl.fromTo(line1,
-      { opacity: 0, y: 32, filter: 'blur(10px)' },
-      { opacity: 1, y: 0,  filter: 'blur(0px)',
-        duration: 0.30, ease: 'power3.out' },
+    // Radial glow rises (30% → 62%)
+    tl.fromTo(glow,
+      { opacity: 0, scale: 0.80 },
+      { opacity: 1, scale: 1,   duration: 0.32, ease: 'power2.out' },
       0.30
     );
 
-    // Line 2 (55% → 82%)
-    tl.fromTo(line2,
+    // Line 1 (55% → 75%)
+    tl.fromTo(line1,
       { opacity: 0, y: 32, filter: 'blur(10px)' },
-      { opacity: 1, y: 0,  filter: 'blur(0px)',
-        duration: 0.27, ease: 'power3.out' },
+      { opacity: 1, y: 0,  filter: 'blur(0px)', duration: 0.20, ease: 'power3.out' },
       0.55
     );
 
-    // Hold — pad to 1.0 so final state settles
-    tl.to({}, { duration: 0.18 }, 0.82);
+    // Line 2 (72% → 90%)
+    tl.fromTo(line2,
+      { opacity: 0, y: 32, filter: 'blur(10px)' },
+      { opacity: 1, y: 0,  filter: 'blur(0px)', duration: 0.18, ease: 'power3.out' },
+      0.72
+    );
+
+    // Hold
+    tl.to({}, { duration: 0.10 }, 0.90);
 
     // ── ScrollTrigger: pin + scrub ─────────────────────────────────────────
     const st = ScrollTrigger.create({
